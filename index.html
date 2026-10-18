@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GTA TEMU - Open World Realistic</title>
+    <title>GTA TEMU - Modern Edition</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,63 +17,66 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #0b0b0b;
+            background-color: #050505;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* --- Ecran Autentificare / Cont --- */
+        /* --- Ecran Autentificare --- */
         #auth-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #111, #2c3e50);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 200;
         }
         .auth-card {
-            background: rgba(20, 20, 20, 0.85);
-            border: 2px solid #f1c40f;
+            background: rgba(15, 15, 20, 0.9);
+            border: 2px solid #00ffcc;
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            width: 340px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
+            width: 350px;
         }
         .auth-card h1 {
-            color: #f1c40f;
+            color: #00ffcc;
             margin-bottom: 20px;
-            font-size: 26px;
-            letter-spacing: 2px;
+            font-size: 28px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0,255,204,0.5);
         }
         .auth-card input {
             width: 100%;
             padding: 12px;
             margin-bottom: 20px;
-            background: #222;
-            border: 1px solid #444;
+            background: #111;
+            border: 1px solid #00ffcc;
             color: #fff;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             text-align: center;
+            outline: none;
         }
         .auth-card button {
             width: 100%;
             padding: 12px;
-            background: #e74c3c;
+            background: #00ffcc;
             border: none;
-            color: #fff;
+            color: #000;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0,255,204,0.4);
         }
         .auth-card button:hover {
-            background: #c0392b;
+            background: #00cca3;
         }
 
         /* --- UI Joc --- */
@@ -93,28 +96,89 @@
             z-index: 10;
         }
         #hud h2 {
-            font-size: 22px;
-            color: #f1c40f;
+            font-size: 24px;
+            color: #00ffcc;
             margin-bottom: 3px;
+            text-shadow: 0 0 8px rgba(0,255,204,0.6);
         }
         #money-display {
-            font-size: 18px;
+            font-size: 19px;
             color: #2ecc71;
             font-weight: bold;
+        }
+        #weapon-display {
+            font-size: 15px;
+            color: #f1c40f;
+            margin-top: 4px;
         }
         #instructions {
             position: absolute;
             top: 20px;
             right: 20px;
             color: #fff;
-            background: rgba(0,0,0,0.65);
-            backdrop-filter: blur(6px);
+            background: rgba(10, 10, 15, 0.75);
+            backdrop-filter: blur(8px);
             padding: 12px 18px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 13px;
             pointer-events: none;
             z-index: 10;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+        }
+
+        /* --- Inventar / Magazin Modal --- */
+        #inventory-modal {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 420px;
+            background: rgba(12, 12, 18, 0.95);
+            border: 2px solid #00ffcc;
+            border-radius: 16px;
+            padding: 25px;
+            z-index: 100;
+            box-shadow: 0 0 40px rgba(0,255,204,0.4);
+            color: #fff;
+            text-align: center;
+        }
+        #inventory-modal h2 {
+            color: #00ffcc;
+            margin-bottom: 15px;
+        }
+        .shop-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #444;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .shop-item button {
+            background: #2ecc71;
+            border: none;
+            padding: 8px 14px;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .shop-item button:hover {
+            background: #27ae60;
+        }
+        #close-inv {
+            margin-top: 15px;
+            background: #e74c3c;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         /* --- Mobil UI --- */
@@ -135,7 +199,7 @@
             width: 130px;
             height: 130px;
             background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(0, 255, 204, 0.4);
             border-radius: 50%;
             pointer-events: auto;
             backdrop-filter: blur(4px);
@@ -146,9 +210,9 @@
             left: 40px;
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 255, 204, 0.8);
             border-radius: 50%;
-            box-shadow: 0 0 12px rgba(0,0,0,0.5);
+            box-shadow: 0 0 12px rgba(0,255,204,0.6);
         }
         #touch-look-zone {
             position: absolute;
@@ -170,25 +234,21 @@
         .btn {
             width: 65px;
             height: 65px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #fff;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ffcc;
             color: #fff;
             border-radius: 50%;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
             backdrop-filter: blur(4px);
         }
-        #btn-car {
-            background: rgba(230, 126, 34, 0.85);
-            display: none;
-        }
-        #btn-jump {
-            background: rgba(46, 204, 113, 0.85);
-        }
+        #btn-car { background: rgba(230, 126, 34, 0.85); display: none; }
+        #btn-jump { background: rgba(46, 204, 113, 0.85); }
+        #btn-inv { background: rgba(155, 89, 182, 0.85); }
     </style>
     <!-- Three.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -198,8 +258,8 @@
     <div id="auth-screen">
         <div class="auth-card">
             <h1>GTA TEMU</h1>
-            <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Creează sau accesează contul tău</p>
-            <input type="text" id="username-input" placeholder="Introdu Numele tău..." maxlength="15">
+            <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Introdu numele pentru a începe jocul</p>
+            <input type="text" id="username-input" placeholder="Nume jucător..." maxlength="15">
             <button id="start-game-btn">INTRĂ ÎN JOC</button>
         </div>
     </div>
@@ -209,57 +269,107 @@
         <div id="hud">
             <h2 id="player-hud-name">Jucător</h2>
             <div id="money-display">Bani: $500</div>
-            <p id="status-text" style="font-size: 14px; margin-top: 5px;">Stare: Pe picioare</p>
+            <div id="weapon-display">Armă: Fără armă</div>
+            <p id="status-text" style="font-size: 13px; margin-top: 5px; color:#aaa;">Stare: Pe picioare</p>
         </div>
         <div id="instructions">
             <b>PC:</b> WASD = Mers | Mouse = Privire<br>
-            Space = Săritură | F / E = Intrare/Ieșire Mașină<br><br>
-            <b>Mobil:</b> Joystick stânga + Touch dreapta
+            Space = Săritură | F/E = Mașină | <b>I = Inventar/Magazin</b><br>
+            Click stânga = Lovire/Tragere NPC-uri<br><br>
+            <b>Mobil:</b> Joystick stânga + Touch dreapta + Buton BAG
         </div>
 
+        <!-- Meniu Inventar / Magazin -->
+        <div id="inventory-modal">
+            <h2>INVENTAR & MAGAZIN</h2>
+            <p style="color:#aaa; margin-bottom:15px; font-size:14px;">Cumpără arme pentru a domina orașul!</p>
+            
+            <div class="shop-item">
+                <span>Pistol (Afișează arma) - $200</span>
+                <button onclick="buyItem('Pistol', 200)">Cumpără</button>
+            </div>
+            <div class="shop-item">
+                <span>Pușcă de Asalt - $500</span>
+                <button onclick="buyItem('Pușcă', 500)">Cumpără</button>
+            </div>
+            <div class="shop-item">
+                <span>Bazooka RPG - $1200</span>
+                <button onclick="buyItem('Bazooka', 1200)">Cumpără</button>
+            </div>
+
+            <button id="close-inv" onclick="toggleInventory(false)">ÎNCHIDE</button>
+        </div>
+
+        <!-- Interfață Mobil -->
         <div class="mobile-controls" id="mobile-ui">
             <div id="joystick-zone">
                 <div id="joystick-knob"></div>
             </div>
             <div id="touch-look-zone"></div>
             <div class="action-buttons">
+                <div class="btn" id="btn-inv" onclick="toggleInventory()">BAG</div>
                 <div class="btn" id="btn-car">CAR</div>
-                <div id="btn-jump" class="btn">JUMP</div>
+                <div class="btn" id="btn-jump">JUMP</div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- Gestionare Cont & Salvat în Browser ---
+        // --- Management Cont & Salvat în Browser ---
         const authScreen = document.getElementById('auth-screen');
         const gameContainer = document.getElementById('game-container');
         const usernameInput = document.getElementById('username-input');
         const startGameBtn = document.getElementById('start-game-btn');
         const playerHudName = document.getElementById('player-hud-name');
         const moneyDisplay = document.getElementById('money-display');
+        const weaponDisplay = document.getElementById('weapon-display');
+        const inventoryModal = document.getElementById('inventory-modal');
 
-        let playerData = JSON.parse(localStorage.getItem('gta_temu_user')) || null;
-
+        let playerData = JSON.parse(localStorage.getItem('gta_temu_modern_user')) || null;
         if (playerData) {
             usernameInput.value = playerData.name;
         }
 
+        function toggleInventory(forceState) {
+            const isVisible = inventoryModal.style.display === 'block';
+            const newState = forceState !== undefined ? forceState : !isVisible;
+            inventoryModal.style.display = newState ? 'block' : 'none';
+        }
+
+        window.buyItem = function(weaponName, cost) {
+            if (!playerData) return;
+            if (playerData.money >= cost) {
+                playerData.money -= cost;
+                playerData.weapon = weaponName;
+                moneyDisplay.innerText = `Bani: $${playerData.money}`;
+                weaponDisplay.innerText = `Armă: ${weaponName}`;
+                localStorage.setItem('gta_temu_modern_user', JSON.stringify(playerData));
+                alert(`Ai cumpărat cu succes: ${weaponName}!`);
+                toggleInventory(false);
+            } else {
+                alert("Nu ai suficienți bani! Furi mașini sau elimină NPC-uri pentru a strânge bani.");
+            }
+        };
+
         startGameBtn.addEventListener('click', () => {
             const name = usernameInput.value.trim();
             if (!name) {
-                alert("Te rog introdu un nume valid!");
+                alert("Introdu un nume valid!");
                 return;
             }
 
             if (!playerData) {
-                playerData = { name: name, money: 500 };
+                playerData = { name: name, money: 600, weapon: 'Fără armă' };
             } else {
                 playerData.name = name;
+                if(playerData.money === undefined) playerData.money = 600;
+                if(!playerData.weapon) playerData.weapon = 'Fără armă';
             }
-            localStorage.setItem('gta_temu_user', JSON.stringify(playerData));
+            localStorage.setItem('gta_temu_modern_user', JSON.stringify(playerData));
 
             playerHudName.innerText = playerData.name;
             moneyDisplay.innerText = `Bani: $${playerData.money}`;
+            weaponDisplay.innerText = `Armă: ${playerData.weapon}`;
 
             authScreen.style.display = 'none';
             gameContainer.style.display = 'block';
@@ -267,26 +377,28 @@
             initGame();
         });
 
-        // --- Variabile principale joc ---
+        // --- Inițiere Joc 3D ---
         function initGame() {
             const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             if (isMobile) {
                 document.getElementById('mobile-ui').style.display = 'block';
             }
 
-            // Texturi Procedurale HD
-            function createRoadTexture() {
+            // Textură Modernă Asfalt & Neon Grid
+            function createModernRoadTexture() {
                 const canvas = document.createElement('canvas');
                 canvas.width = 512; canvas.height = 512;
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#222222';
+                ctx.fillStyle = '#141414';
                 ctx.fillRect(0, 0, 512, 512);
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 10;
-                ctx.strokeRect(5, 5, 502, 502);
-                ctx.strokeStyle = '#f1c40f';
+                // Margini stradale luminoase
+                ctx.strokeStyle = '#00ffcc';
                 ctx.lineWidth = 8;
-                ctx.setLineDash([30, 20]);
+                ctx.strokeRect(4, 4, 504, 504);
+                // Linii centrale neon
+                ctx.strokeStyle = '#ff007f';
+                ctx.lineWidth = 6;
+                ctx.setLineDash([35, 25]);
                 ctx.beginPath();
                 ctx.moveTo(256, 0); ctx.lineTo(256, 512);
                 ctx.moveTo(0, 256); ctx.lineTo(512, 256);
@@ -297,16 +409,16 @@
                 return texture;
             }
 
-            function createBuildingTexture() {
+            function createCyberBuildingTexture() {
                 const canvas = document.createElement('canvas');
                 canvas.width = 256; canvas.height = 256;
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#2c3e50';
+                ctx.fillStyle = '#1a1a24';
                 ctx.fillRect(0, 0, 256, 256);
-                for(let x = 12; x < 240; x += 32) {
-                    for(let y = 12; y < 240; y += 44) {
-                        ctx.fillStyle = Math.random() > 0.25 ? '#f39c12' : '#1a252f';
-                        ctx.fillRect(x, y, 18, 26);
+                for(let x = 12; x < 240; x += 30) {
+                    for(let y = 12; y < 240; y += 40) {
+                        ctx.fillStyle = Math.random() > 0.3 ? '#00ffcc' : '#ff007f';
+                        ctx.fillRect(x, y, 16, 26);
                     }
                 }
                 const texture = new THREE.CanvasTexture(canvas);
@@ -315,10 +427,10 @@
                 return texture;
             }
 
-            // --- Scenă, Cameră, Renderer ---
+            // --- Scenă ---
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x6aaed6);
-            scene.fog = new THREE.FogExp2(0x6aaed6, 0.005);
+            scene.background = new THREE.Color(0x0b0b14);
+            scene.fog = new THREE.FogExp2(0x0b0b14, 0.006);
 
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -327,49 +439,44 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             document.getElementById('game-container').appendChild(renderer.domElement);
 
-            // Iluminare
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            // Lumini Cyberpunk
+            const ambientLight = new THREE.AmbientLight(0x222233, 0.8);
             scene.add(ambientLight);
 
-            const sunLight = new THREE.DirectionalLight(0xfffaed, 0.9);
+            const neonLight1 = new THREE.PointLight(0x00ffcc, 1, 200);
+            neonLight1.position.set(0, 80, 0);
+            scene.add(neonLight1);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.6);
             sunLight.position.set(150, 250, 100);
             sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 2048;
-            sunLight.shadow.mapSize.height = 2048;
-            const d = 150;
-            sunLight.shadow.camera.left = -d;
-            sunLight.shadow.camera.right = d;
-            sunLight.shadow.camera.top = d;
-            sunLight.shadow.camera.bottom = -d;
             scene.add(sunLight);
 
             // --- Hartă Mare & Sol ---
-            const mapSize = 800;
-            const roadTexture = createRoadTexture();
-            roadTexture.repeat.set(40, 40);
+            const mapSize = 900;
+            const roadTexture = createModernRoadTexture();
+            roadTexture.repeat.set(45, 45);
             const floorGeo = new THREE.PlaneGeometry(mapSize, mapSize);
-            const floorMat = new THREE.MeshStandardMaterial({ map: roadTexture, roughness: 0.85 });
+            const floorMat = new THREE.MeshStandardMaterial({ map: roadTexture, roughness: 0.7 });
             const floor = new THREE.Mesh(floorGeo, floorMat);
             floor.rotation.x = -Math.PI / 2;
             floor.receiveShadow = true;
             scene.add(floor);
 
-            // --- Clădiri & Sistem Coliziuni (Bounding Boxes) ---
+            // --- Clădiri & Coliziuni Rigide ---
             const buildings = [];
-            const buildingTexture = createBuildingTexture();
+            const buildingTexture = createCyberBuildingTexture();
             const buildingGeoTemplate = new THREE.BoxGeometry(1, 1, 1);
-            const buildingMat = new THREE.MeshStandardMaterial({ map: buildingTexture, roughness: 0.4 });
+            const buildingMat = new THREE.MeshStandardMaterial({ map: buildingTexture, roughness: 0.3, metalness: 0.2 });
 
-            // Generare oraș mare cu grile organizate (evitând mijlocul străzilor)
-            for (let x = -320; x <= 320; x += 55) {
-                for (let z = -320; z <= 320; z += 55) {
-                    // Evităm centrul absolut (spawn-ul)
-                    if (Math.abs(x) < 35 && Math.abs(z) < 35) continue;
-                    if (Math.random() > 0.8) continue; // Spații libere / parcuri
+            for (let x = -380; x <= 380; x += 60) {
+                for (let z = -380; z <= 380; z += 60) {
+                    if (Math.abs(x) < 40 && Math.abs(z) < 40) continue;
+                    if (Math.random() > 0.82) continue;
 
-                    const h = 25 + Math.random() * 50;
-                    const w = 22 + Math.random() * 8;
-                    const dSize = 22 + Math.random() * 8;
+                    const h = 30 + Math.random() * 60;
+                    const w = 24 + Math.random() * 8;
+                    const dSize = 24 + Math.random() * 8;
 
                     const building = new THREE.Mesh(buildingGeoTemplate, buildingMat);
                     building.scale.set(w, h, dSize);
@@ -378,20 +485,31 @@
                     building.receiveShadow = true;
                     scene.add(building);
 
-                    // Creare cutie de coliziune (AABB) pentru fiecare clădire
                     const box = new THREE.Box3().setFromObject(building);
                     buildings.push(box);
                 }
             }
+            const mapBoundary = mapSize / 2 - 12;
 
-            // Margini hartă (pereți invizibili de protecție)
-            const mapBoundary = mapSize / 2 - 10;
+            function checkCollision(position, radius = 0.7) {
+                if (Math.abs(position.x) > mapBoundary || Math.abs(position.z) > mapBoundary) return true;
+                for (let i = 0; i < buildings.length; i++) {
+                    const box = buildings[i];
+                    if (
+                        position.x + radius > box.min.x && position.x - radius < box.max.x &&
+                        position.z + radius > box.min.z && position.z - radius < box.max.z
+                    ) {
+                        return true;
+                    }
+                }
+                return false;
+            }
 
-            // --- Constructor Pietoni (Jucător / NPC) ---
-            function createPedestrianMesh(shirtColor) {
+            // --- Jucător ---
+            function createPlayerMesh() {
                 const group = new THREE.Group();
                 const bodyGeo = new THREE.BoxGeometry(0.6, 0.9, 0.35);
-                const bodyMat = new THREE.MeshStandardMaterial({ color: shirtColor });
+                const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, metalness: 0.5 });
                 const body = new THREE.Mesh(bodyGeo, bodyMat);
                 body.position.y = 1.05;
                 body.castShadow = true;
@@ -405,10 +523,9 @@
                 group.add(head);
 
                 const legGeo = new THREE.BoxGeometry(0.22, 0.6, 0.25);
-                const legMat = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+                const legMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
                 const legL = new THREE.Mesh(legGeo, legMat);
                 legL.position.set(-0.16, 0.3, 0);
-                legL.castShadow = true;
                 group.add(legL);
 
                 const legR = legL.clone();
@@ -419,58 +536,56 @@
                 return group;
             }
 
-            const playerGroup = createPedestrianMesh(0x2980b9);
-            playerGroup.position.set(0, 0, 10);
+            const playerGroup = createPlayerMesh();
+            playerGroup.position.set(0, 0, 15);
             scene.add(playerGroup);
 
-            // --- Pietoni NPC ---
+            // --- Pietoni / NPC-uri (Se pot elimina pentru bani) ---
             const npcs = [];
-            const npcColors = [0xe74c3c, 0x2ecc71, 0x9b59b6, 0xf1c40f, 0xe67e22, 0x1abc9c];
-            for (let i = 0; i < 40; i++) {
-                const npc = createPedestrianMesh(npcColors[i % npcColors.length]);
-                npc.position.set((Math.random() - 0.5) * 500, 0, (Math.random() - 0.5) * 500);
+            const npcColors = [0xff0055, 0x00ffcc, 0xffd700, 0x9b59b6, 0x3498db];
+            for (let i = 0; i < 45; i++) {
+                const npc = createPlayerMesh();
+                npc.position.set((Math.random() - 0.5) * 600, 0, (Math.random() - 0.5) * 600);
                 scene.add(npc);
                 npcs.push({
                     mesh: npc,
                     dir: new THREE.Vector3((Math.random() - 0.5), 0, (Math.random() - 0.5)).normalize(),
-                    speed: 0.025 + Math.random() * 0.02,
-                    animTimer: Math.random() * 10
+                    speed: 0.025 + Math.random() * 0.025,
+                    animTimer: Math.random() * 10,
+                    alive: true
                 });
             }
 
-            // --- Constructor Mașini ---
-            function createCarMesh(colorHex) {
+            // --- Constructor Mașini Sport Moderne ---
+            function createModernCar(colorHex) {
                 const carGroup = new THREE.Group();
-                const bodyGeo = new THREE.BoxGeometry(2.2, 0.9, 4.4);
-                const bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.4, roughness: 0.2 });
+                const bodyGeo = new THREE.BoxGeometry(2.2, 0.8, 4.6);
+                const bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.7, roughness: 0.15 });
                 const body = new THREE.Mesh(bodyGeo, bodyMat);
-                body.position.y = 0.7;
+                body.position.y = 0.65;
                 body.castShadow = true;
                 carGroup.add(body);
 
-                const cabinGeo = new THREE.BoxGeometry(1.8, 0.7, 2.2);
-                const cabinMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1 });
+                const cabinGeo = new THREE.BoxGeometry(1.7, 0.6, 2.3);
+                const cabinMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.1 });
                 const cabin = new THREE.Mesh(cabinGeo, cabinMat);
-                cabin.position.set(0, 1.4, -0.2);
+                cabin.position.set(0, 1.25, -0.2);
                 cabin.castShadow = true;
                 carGroup.add(cabin);
 
-                const lightGeo = new THREE.BoxGeometry(0.4, 0.2, 0.1);
-                const lightMat = new THREE.MeshBasicMaterial({ color: 0xffffaa });
-                const headlightL = new THREE.Mesh(lightGeo, lightMat);
-                headlightL.position.set(-0.8, 0.7, 2.21);
-                const headlightR = headlightL.clone();
-                headlightR.position.x = 0.8;
-                carGroup.add(headlightL);
-                carGroup.add(headlightR);
+                // Lumini neon sport
+                const lightGeo = new THREE.BoxGeometry(0.4, 0.15, 0.1);
+                const lightMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc });
+                const fLightL = new THREE.Mesh(lightGeo, lightMat);
+                fLightL.position.set(-0.8, 0.6, 2.31);
+                const fLightR = fLightL.clone();
+                fLightR.position.x = 0.8;
+                carGroup.add(fLightL);
+                carGroup.add(fLightR);
 
-                const wheelGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.3, 16);
+                const wheelGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.3, 16);
                 const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
-                const wheelPositions = [
-                    [-1.15, 0.4, 1.3], [1.15, 0.4, 1.3],
-                    [-1.15, 0.4, -1.3], [1.15, 0.4, -1.3]
-                ];
-                wheelPositions.forEach(pos => {
+                [[ -1.15, 0.38, 1.4 ], [ 1.15, 0.38, 1.4 ], [ -1.15, 0.38, -1.4 ], [ 1.15, 0.38, -1.4 ]].forEach(pos => {
                     const w = new THREE.Mesh(wheelGeo, wheelMat);
                     w.rotation.z = Math.PI / 2;
                     w.position.set(...pos);
@@ -481,40 +596,18 @@
                 return carGroup;
             }
 
-            // Mașini în Trafic
             const cars = [];
-            const carColors = [0xcc0000, 0x0066cc, 0x333333, 0xffffff, 0xe67e22, 0x8e44ad];
-            for (let i = 0; i < 18; i++) {
-                const carMesh = createCarMesh(carColors[i % carColors.length]);
-                carMesh.position.set((Math.random() - 0.5) * 600, 0, (Math.random() - 0.5) * 600);
+            const carColors = [0xff0055, 0x00ffcc, 0xffd700, 0x3498db, 0x9b59b6, 0xecf0f1];
+            for (let i = 0; i < 20; i++) {
+                const carMesh = createModernCar(carColors[i % carColors.length]);
+                carMesh.position.set((Math.random() - 0.5) * 700, 0, (Math.random() - 0.5) * 700);
                 scene.add(carMesh);
 
                 cars.push({
                     mesh: carMesh,
-                    speed: 0.12 + Math.random() * 0.1,
+                    speed: 0.15 + Math.random() * 0.1,
                     isOccupied: false
                 });
-            }
-
-            // --- Verificare Coliziuni Rigide (Previne trecerea prin pereți) ---
-            function checkCollision(position, radius = 0.6) {
-                // Verificare margini hartă
-                if (Math.abs(position.x) > mapBoundary || Math.abs(position.z) > mapBoundary) {
-                    return true;
-                }
-
-                // Verificare clădiri
-                for (let i = 0; i < buildings.length; i++) {
-                    // Expandare ușoară a cutiei cu raza jucătorului pentru precizie
-                    const box = buildings[i];
-                    if (
-                        position.x + radius > box.min.x && position.x - radius < box.max.x &&
-                        position.z + radius > box.min.z && position.z - radius < box.max.z
-                    ) {
-                        return true; // Există coliziune
-                    }
-                }
-                return false;
             }
 
             // --- Stare Joc & Controale ---
@@ -522,6 +615,7 @@
             let playerVelY = 0;
             let isGrounded = true;
             let carSpeed = 0;
+            let carDriftFactor = 0;
             const keys = {};
 
             let cameraYaw = 0;
@@ -530,17 +624,25 @@
 
             window.addEventListener('keydown', e => {
                 keys[e.code] = true;
+                if (e.code === 'KeyI') toggleInventory();
                 if (e.code === 'KeyF' || e.code === 'KeyE') toggleCarInteraction();
                 if (e.code === 'Space' && !currentCar && isGrounded) {
-                    playerVelY = 0.22;
+                    playerVelY = 0.24;
                     isGrounded = false;
                 }
             });
             window.addEventListener('keyup', e => keys[e.code] = false);
 
             renderer.domElement.addEventListener('click', () => {
-                if (!isMobile) renderer.domElement.requestPointerLock();
+                if (!isMobile) {
+                    renderer.domElement.requestPointerLock();
+                    // Acțiune de atac / tragere cu armă în NPC-uri
+                    if (!currentCar && playerData.weapon !== 'Fără armă') {
+                        checkAttackNPCs();
+                    }
+                }
             });
+
             document.addEventListener('mousemove', e => {
                 if (document.pointerLockElement === renderer.domElement) {
                     cameraYaw -= e.movementX * 0.003;
@@ -549,7 +651,27 @@
                 }
             });
 
-            // Controale Mobil
+            // Atac / Eliminare NPC-uri pentru bani
+            function checkAttackNPCs() {
+                npcs.forEach(npc => {
+                    if (npc.alive && playerGroup.position.distanceTo(npc.mesh.position) < 8.0) {
+                        npc.alive = false;
+                        scene.remove(npc.mesh);
+                        
+                        // Recompensă bani
+                        let reward = 100;
+                        if (playerData.weapon === 'Pușcă') reward = 250;
+                        if (playerData.weapon === 'Bazooka') reward = 500;
+
+                        playerData.money += reward;
+                        moneyDisplay.innerText = `Bani: $${playerData.money}`;
+                        localStorage.setItem('gta_temu_modern_user', JSON.stringify(playerData));
+                        document.getElementById('status-text').innerText = `Eliminat NPC! +$${reward}`;
+                    }
+                });
+            }
+
+            // --- Controale Mobil ---
             const joystickZone = document.getElementById('joystick-zone');
             const joystickKnob = document.getElementById('joystick-knob');
             const touchLookZone = document.getElementById('touch-look-zone');
@@ -625,8 +747,10 @@
             btnJump.addEventListener('touchstart', e => {
                 e.preventDefault();
                 if (!currentCar && isGrounded) {
-                    playerVelY = 0.22;
+                    playerVelY = 0.24;
                     isGrounded = false;
+                } else if(!currentCar && playerData.weapon !== 'Fără armă') {
+                    checkAttackNPCs();
                 }
             });
             btnCar.addEventListener('touchstart', e => {
@@ -634,6 +758,7 @@
                 toggleCarInteraction();
             });
 
+            // --- Furt Mașini ---
             function toggleCarInteraction() {
                 if (currentCar) {
                     playerGroup.visible = true;
@@ -645,7 +770,7 @@
                     btnJump.style.display = "flex";
                 } else {
                     let closest = null;
-                    let minDist = 4.5;
+                    let minDist = 5.0;
                     cars.forEach(c => {
                         const d = playerGroup.position.distanceTo(c.mesh.position);
                         if (d < minDist) {
@@ -662,10 +787,10 @@
                         btnCar.innerText = "EXIT";
                         btnJump.style.display = "none";
 
-                        // Recompensă bani la furt auto
-                        playerData.money += 50;
+                        // Recompensă bani furt auto
+                        playerData.money += 75;
                         moneyDisplay.innerText = `Bani: $${playerData.money}`;
-                        localStorage.setItem('gta_temu_user', JSON.stringify(playerData));
+                        localStorage.setItem('gta_temu_modern_user', JSON.stringify(playerData));
                     }
                 }
             }
@@ -680,7 +805,7 @@
                 if (!currentCar) {
                     let near = false;
                     cars.forEach(c => {
-                        if (playerGroup.position.distanceTo(c.mesh.position) < 4.5) near = true;
+                        if (playerGroup.position.distanceTo(c.mesh.position) < 5.0) near = true;
                     });
                     btnCar.style.display = near ? "flex" : "none";
                 } else {
@@ -689,14 +814,14 @@
 
                 // Pietoni NPC
                 npcs.forEach(npc => {
+                    if(!npc.alive) return;
                     npc.mesh.position.addScaledVector(npc.dir, npc.speed);
                     npc.mesh.rotation.y = Math.atan2(npc.dir.x, npc.dir.z);
                     npc.animTimer += 0.1;
                     npc.mesh.userData.legL.rotation.x = Math.sin(npc.animTimer) * 0.5;
                     npc.mesh.userData.legR.rotation.x = -Math.sin(npc.animTimer) * 0.5;
 
-                    // Schimbă direcția dacă lovește marginea sau merge prea departe
-                    if (Math.abs(npc.mesh.position.x) > mapBoundary - 20 || Math.abs(npc.mesh.position.z) > mapBoundary - 20) {
+                    if (Math.abs(npc.mesh.position.x) > mapBoundary - 25 || Math.abs(npc.mesh.position.z) > mapBoundary - 25) {
                         npc.dir.negate();
                     }
                 });
@@ -705,15 +830,15 @@
                 cars.forEach(c => {
                     if (!c.isOccupied) {
                         c.mesh.translateZ(c.speed);
-                        if (Math.abs(c.mesh.position.x) > mapBoundary - 20 || Math.abs(c.mesh.position.z) > mapBoundary - 20) {
+                        if (Math.abs(c.mesh.position.x) > mapBoundary - 25 || Math.abs(c.mesh.position.z) > mapBoundary - 25) {
                             c.mesh.rotation.y += Math.PI;
                         }
                     }
                 });
 
                 if (!currentCar) {
-                    // --- Mișcare Jucător + Coliziuni ---
-                    let speed = 0.16;
+                    // --- Mișcare Jucător ---
+                    let speed = 0.18;
                     let moveX = 0, moveZ = 0;
 
                     if (keys['KeyW'] || keys['ArrowUp']) moveZ -= 1;
@@ -728,23 +853,17 @@
                         const moveVector = new THREE.Vector3(moveX, 0, moveZ).normalize();
                         moveVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraYaw);
 
-                        // Testare coliziune pe Axa X
                         const nextPosX = playerGroup.position.clone();
                         nextPosX.x += moveVector.x * speed;
-                        if (!checkCollision(nextPosX)) {
-                            playerGroup.position.x = nextPosX.x;
-                        }
+                        if (!checkCollision(nextPosX)) playerGroup.position.x = nextPosX.x;
 
-                        // Testare coliziune pe Axa Z
                         const nextPosZ = playerGroup.position.clone();
                         nextPosZ.z += moveVector.z * speed;
-                        if (!checkCollision(nextPosZ)) {
-                            playerGroup.position.z = nextPosZ.z;
-                        }
+                        if (!checkCollision(nextPosZ)) playerGroup.position.z = nextPosZ.z;
 
                         playerGroup.rotation.y = Math.atan2(moveVector.x, moveVector.z);
 
-                        walkAnimTimer += 0.15;
+                        walkAnimTimer += 0.16;
                         playerGroup.userData.legL.rotation.x = Math.sin(walkAnimTimer) * 0.6;
                         playerGroup.userData.legR.rotation.x = -Math.sin(walkAnimTimer) * 0.6;
                     } else {
@@ -762,7 +881,7 @@
                         isGrounded = true;
                     }
 
-                    // Cameră Third-Person
+                    // Cameră Third-Person Jucător
                     const camDist = 6.5;
                     camera.position.x = playerGroup.position.x + camDist * Math.sin(cameraYaw) * Math.cos(cameraPitch);
                     camera.position.z = playerGroup.position.z + camDist * Math.cos(cameraYaw) * Math.cos(cameraPitch);
@@ -770,37 +889,50 @@
                     camera.lookAt(playerGroup.position.x, playerGroup.position.y + 1.2, playerGroup.position.z);
 
                 } else {
-                    // --- Condus Mașină + Coliziuni ---
+                    // --- Fizică Mașină Rapidă & Sistem Drift ---
                     let accel = 0;
                     let turn = 0;
 
-                    if (keys['KeyW'] || keys['ArrowUp']) accel = 0.022;
-                    if (keys['KeyS'] || keys['ArrowDown']) accel = -0.015;
-                    if (keys['KeyA'] || keys['ArrowLeft']) turn = 0.035;
-                    if (keys['KeyD'] || keys['ArrowRight']) turn = -0.035;
+                    if (keys['KeyW'] || keys['ArrowUp']) accel = 0.035; // Viteză superioară
+                    if (keys['KeyS'] || keys['ArrowDown']) accel = -0.02;
+                    if (keys['KeyA'] || keys['ArrowLeft']) turn = 0.045;
+                    if (keys['KeyD'] || keys['ArrowRight']) turn = -0.045;
 
-                    if (Math.abs(moveForward) > 0.1) accel = moveForward * 0.022;
-                    if (Math.abs(moveSide) > 0.1) turn = -moveSide * 0.035;
+                    if (Math.abs(moveForward) > 0.1) accel = moveForward * 0.035;
+                    if (Math.abs(moveSide) > 0.1) turn = -moveSide * 0.045;
 
                     carSpeed += accel;
-                    carSpeed *= 0.94; // Frecare
+                    carSpeed *= 0.96; // Frecare redusă pentru viteză mare
 
-                    currentCar.mesh.rotation.y += turn * (carSpeed * 1.5);
+                    // Mecanică Drift / Deraiaj
+                    if (Math.abs(carSpeed) > 0.3 && turn !== 0) {
+                        carDriftFactor += (turn * 0.3 - carDriftFactor) * 0.1;
+                    } else {
+                        carDriftFactor *= 0.9;
+                    }
+
+                    currentCar.mesh.rotation.y += (turn + carDriftFactor) * (carSpeed * 1.2);
                     
                     const nextCarPos = currentCar.mesh.position.clone();
                     currentCar.mesh.translateZ(carSpeed);
 
-                    // Coliziuni mașină cu clădirile
-                    if (checkCollision(currentCar.mesh.position, 1.5)) {
-                        currentCar.mesh.position.copy(nextCarPos); // Anulează mișcarea dacă lovește clădirea
-                        carSpeed = -carSpeed * 0.3; // Recul ușor
+                    // Recompensă bani pentru condus cu viteză maximă
+                    if (Math.abs(carSpeed) > 0.6 && Math.random() < 0.01) {
+                        playerData.money += 2;
+                        moneyDisplay.innerText = `Bani: $${playerData.money}`;
                     }
 
-                    // Cameră Mașină
-                    const camDist = 9.5;
+                    // Coliziuni mașină cu clădirile
+                    if (checkCollision(currentCar.mesh.position, 1.6)) {
+                        currentCar.mesh.position.copy(nextCarPos);
+                        carSpeed = -carSpeed * 0.25; // Impact / Recul
+                    }
+
+                    // Cameră dinamică pentru Mașină (Viteză & Drift)
+                    const camDist = 10.0;
                     camera.position.x = currentCar.mesh.position.x - camDist * Math.sin(currentCar.mesh.rotation.y);
                     camera.position.z = currentCar.mesh.position.z - camDist * Math.cos(currentCar.mesh.rotation.y);
-                    camera.position.y = currentCar.mesh.position.y + 3.8;
+                    camera.position.y = currentCar.mesh.position.y + 4.0;
                     camera.lookAt(currentCar.mesh.position.x, currentCar.mesh.position.y + 1, currentCar.mesh.position.z);
                 }
 
