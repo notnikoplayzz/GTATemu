@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GTA TEMU - Advanced Inventory & Shop</title>
+    <title>GTA Next-Gen 3D Simulator</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,127 +17,175 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #050505;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #05070a;
+            font-family: 'Montserrat', 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* --- Ecran Autentificare --- */
+        /* --- Ecran Autentificare Premium --- */
         #auth-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: radial-gradient(circle at center, #1a1f2c 0%, #080a0f 100%);
             display: flex; align-items: center; justify-content: center;
             z-index: 200;
         }
         .auth-card {
-            background: rgba(15, 15, 20, 0.95);
-            border: 2px solid #00ffcc;
-            padding: 40px; border-radius: 16px; text-align: center;
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3); width: 350px;
+            background: rgba(18, 22, 31, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 45px; border-radius: 24px; text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 150, 255, 0.1);
+            width: 380px;
         }
-        .auth-card h1 { color: #00ffcc; margin-bottom: 20px; font-size: 28px; letter-spacing: 3px; }
+        .auth-card h1 {
+            color: #ffffff; margin-bottom: 8px; font-size: 32px; font-weight: 800;
+            letter-spacing: 2px; text-transform: uppercase;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .auth-card p { color: #94a3b8; font-size: 13px; margin-bottom: 25px; }
         .auth-card input {
-            width: 100%; padding: 12px; margin-bottom: 20px;
-            background: #111; border: 1px solid #00ffcc; color: #fff;
-            border-radius: 8px; font-size: 16px; text-align: center; outline: none;
+            width: 100%; padding: 14px 18px; margin-bottom: 22px;
+            background: rgba(10, 14, 23, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff; border-radius: 12px; font-size: 15px; text-align: center; outline: none;
+            transition: all 0.3s ease;
+        }
+        .auth-card input:focus {
+            border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
         }
         .auth-card button {
-            width: 100%; padding: 12px; background: #00ffcc; border: none;
-            color: #000; font-weight: bold; border-radius: 8px; font-size: 16px; cursor: pointer;
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+            border: none; color: #fff; font-weight: 700; border-radius: 12px;
+            font-size: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); transition: all 0.3s ease;
         }
+        .auth-card button:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.6); }
 
-        /* --- UI Joc --- */
+        /* --- UI Joc Modern --- */
         #game-container { width: 100%; height: 100%; position: relative; display: none; }
         #hud {
-            position: absolute; top: 20px; left: 20px; color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9); pointer-events: none; z-index: 10;
+            position: absolute; top: 25px; left: 25px; color: #fff;
+            pointer-events: none; z-index: 10;
+            background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(12px);
+            padding: 16px 22px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        #hud h2 { font-size: 24px; color: #00ffcc; }
-        #money-display { font-size: 19px; color: #2ecc71; font-weight: bold; }
-        #weapon-display { font-size: 15px; color: #f1c40f; margin-top: 4px; }
+        #hud h2 { font-size: 20px; color: #f8fafc; font-weight: 700; margin-bottom: 4px; }
+        #money-display { font-size: 18px; color: #4ade80; font-weight: 800; letter-spacing: 0.5px; }
+        #weapon-display { font-size: 13px; color: #cbd5e1; margin-top: 4px; font-weight: 500; }
 
-        /* --- Bară Quick Slots (1, 2, 3) Jos pe Ecran --- */
+        /* --- Crosshair Tintă Realistică --- */
+        #crosshair {
+            position: absolute; top: 50%; left: 50%;
+            width: 10px; height: 10px; transform: translate(-50%, -50%);
+            pointer-events: none; z-index: 15; display: flex; align-items: center; justify-content: center;
+        }
+        #crosshair::before, #crosshair::after {
+            content: ''; position: absolute; background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+        #crosshair::before { width: 2px; height: 10px; }
+        #crosshair::after { width: 10px; height: 2px; }
+
+        /* --- Bară Quick Slots (1, 2, 3) Neumorfică & Glassmorphism --- */
         #quick-bar {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 12px; z-index: 30; background: rgba(0,0,0,0.6);
-            padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(0,255,204,0.4);
-            backdrop-filter: blur(5px);
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 14px; z-index: 30;
+            background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(16px);
+            padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         .quick-slot {
-            width: 60px; height: 60px; background: rgba(20, 20, 25, 0.8);
-            border: 2px solid #444; border-radius: 8px; color: #fff;
+            width: 65px; height: 65px; background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; color: #fff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: bold; position: relative; cursor: pointer;
+            font-size: 11px; font-weight: 600; position: relative; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .quick-slot.active { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0,255,204,0.6); }
-        .slot-key { position: absolute; top: 2px; left: 5px; color: #888; font-size: 10px; }
+        .quick-slot.active {
+            border-color: #38bdf8; background: rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.35); transform: translateY(-4px);
+        }
+        .slot-key { position: absolute; top: 4px; left: 6px; color: #64748b; font-size: 10px; font-weight: 800; }
 
-        /* --- UI Modale (Inventar & Shop) --- */
+        /* --- Modale Next-Gen (Inventar & Shop) --- */
         .modal-overlay {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 100;
+            background: rgba(8, 10, 15, 0.75); backdrop-filter: blur(12px); z-index: 100;
             align-items: center; justify-content: center;
         }
         .window-box {
-            background: rgba(15, 15, 22, 0.95); border: 2px solid #00ffcc;
-            border-radius: 16px; padding: 25px; width: 480px; color: #fff;
-            box-shadow: 0 0 30px rgba(0,255,204,0.3); position: relative;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px;
+            padding: 30px; width: 500px; color: #fff;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7); position: relative;
         }
-        .window-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .window-header h2 { color: #00ffcc; }
+        .window-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+        .window-header h2 { font-size: 22px; font-weight: 700; color: #f8fafc; }
         .btn-nav {
-            background: #00ffcc; color: #000; border: none; padding: 6px 14px;
-            font-weight: bold; border-radius: 6px; cursor: pointer;
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: #fff; border: none; padding: 8px 18px; font-weight: 600;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 13px;
         }
+        .btn-nav:hover { opacity: 0.9; transform: scale(1.02); }
 
         /* Grid Inventar */
-        .inv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .inv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
         .inv-slot {
-            width: 100%; height: 80px; background: rgba(255,255,255,0.05);
-            border: 1px dashed #555; border-radius: 8px; display: flex;
+            width: 100%; height: 85px; background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 14px; display: flex;
             align-items: center; justify-content: center; font-size: 12px; text-align: center;
-            cursor: grab; position: relative;
+            cursor: pointer; position: relative; transition: all 0.2s;
         }
+        .inv-slot:hover { border-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
         .inv-item {
-            width: 90%; height: 90%; background: rgba(0,255,204,0.15);
-            border: 1px solid #00ffcc; border-radius: 6px; display: flex;
-            align-items: center; justify-content: center; font-weight: bold; color: #fff;
-            font-size: 12px; cursor: grab;
+            width: 90%; height: 90%; background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 10px; display: flex;
+            align-items: center; justify-content: center; font-weight: 700; color: #f8fafc;
+            font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         /* Lista Shop */
-        .shop-list { display: flex; flex-direction: column; gap: 12px; }
+        .shop-list { display: flex; flex-direction: column; gap: 14px; }
         .shop-row {
-            background: rgba(255,255,255,0.05); border: 1px solid #333;
-            padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center;
         }
+        .shop-row span { font-weight: 600; font-size: 15px; color: #e2e8f0; }
         .shop-row button {
-            background: #2ecc71; border: none; color: #fff; padding: 8px 16px;
-            font-weight: bold; border-radius: 6px; cursor: pointer;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border: none; color: #fff; padding: 10px 20px; font-weight: 700;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
         }
+        .shop-row button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(22, 163, 74, 0.5); }
 
-        /* Mobil UI Buttons */
+        /* Mobil UI Sleek Buttons */
         .mobile-controls { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
         #joystick-zone {
-            position: absolute; bottom: 30px; left: 30px; width: 130px; height: 130px;
-            background: rgba(255,255,255,0.15); border: 2px solid rgba(0, 255, 204, 0.4);
-            border-radius: 50%; pointer-events: auto; backdrop-filter: blur(4px);
+            position: absolute; bottom: 35px; left: 35px; width: 140px; height: 140px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%; pointer-events: auto; backdrop-filter: blur(10px);
         }
         #joystick-knob {
-            position: absolute; top: 40px; left: 40px; width: 50px; height: 50px;
-            background: rgba(0, 255, 204, 0.8); border-radius: 50%;
+            position: absolute; top: 45px; left: 45px; width: 50px; height: 50px;
+            background: radial-gradient(circle at center, #38bdf8 0%, #0284c7 100%);
+            border-radius: 50%; box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
         }
         #touch-look-zone { position: absolute; top: 0; right: 0; width: 50%; height: 100%; pointer-events: auto; }
-        .action-buttons { position: absolute; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 12px; pointer-events: auto; }
+        .action-buttons { position: absolute; bottom: 35px; right: 35px; display: flex; flex-direction: column; gap: 14px; pointer-events: auto; }
         .btn {
-            width: 60px; height: 60px; background: rgba(0, 0, 0, 0.7); border: 2px solid #00ffcc;
-            color: #fff; border-radius: 50%; font-weight: bold; font-size: 12px;
-            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+            width: 62px; height: 62px; background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 50%;
+            font-weight: 700; font-size: 11px; letter-spacing: 0.5px;
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(12px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4); transition: all 0.15s ease;
         }
-        #btn-car { background: rgba(230, 126, 34, 0.85); display: none; }
-        #btn-jump { background: rgba(46, 204, 113, 0.85); }
-        #btn-inv { background: rgba(155, 89, 182, 0.85); }
-        #btn-shop { background: rgba(52, 152, 219, 0.85); }
+        .btn:active { transform: scale(0.92); }
+        #btn-car { background: rgba(234, 88, 12, 0.7); border-color: rgba(251, 146, 60, 0.5); display: none; }
+        #btn-jump { background: rgba(22, 163, 74, 0.7); border-color: rgba(74, 222, 128, 0.5); }
+        #btn-inv { background: rgba(147, 51, 234, 0.7); border-color: rgba(192, 132, 252, 0.5); }
+        #btn-shop { background: rgba(2, 132, 199, 0.7); border-color: rgba(56, 189, 248, 0.5); }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -145,9 +193,10 @@
     <!-- Ecran Autentificare -->
     <div id="auth-screen">
         <div class="auth-card">
-            <h1>GTA TEMU</h1>
-            <input type="text" id="username-input" placeholder="Nume jucător..." maxlength="15">
-            <button id="start-game-btn">INTRĂ ÎN JOC</button>
+            <h1>GTA SIMULATOR</h1>
+            <p>Next-Generation Graphics & Physics Engine</p>
+            <input type="text" id="username-input" placeholder="Nume Comandant..." maxlength="15">
+            <button id="start-game-btn">PORNEȘTE SIMULATORUL</button>
         </div>
     </div>
 
@@ -155,9 +204,11 @@
     <div id="game-container">
         <div id="hud">
             <h2 id="player-hud-name">Jucător</h2>
-            <div id="money-display">Bani: $1000</div>
+            <div id="money-display">Bani: $1,000</div>
             <div id="weapon-display">Armă Echipată: Fără</div>
         </div>
+
+        <div id="crosshair"></div>
 
         <!-- Quick Slots (Bară 1, 2, 3) -->
         <div id="quick-bar">
@@ -175,20 +226,18 @@
             </div>
         </div>
 
-        <!-- Modal Inventar Modern -->
+        <!-- Modal Inventar -->
         <div class="modal-overlay" id="inv-modal">
             <div class="window-box">
                 <div class="window-header">
-                    <h2>INVENTARUL TĂU</h2>
+                    <h2>INVENTAR ECHIPAMENT</h2>
                     <div>
-                        <button class="btn-nav" onclick="openShopModal()">MAGAZIN / SHOP</button>
-                        <button style="background:#e74c3c; border:none; color:#fff; padding:6px 12px; font-weight:bold; border-radius:6px; cursor:pointer;" onclick="closeModals()">X</button>
+                        <button class="btn-nav" onclick="openShopModal()">MAGAZIN</button>
+                        <button style="background:rgba(239, 68, 68, 0.8); border:none; color:#fff; padding:8px 14px; font-weight:700; border-radius:10px; cursor:pointer;" onclick="closeModals()">X</button>
                     </div>
                 </div>
-                <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Trage arma cu mouse-ul pe sloturile 1, 2 sau 3 din josul ecranului!</p>
-                <div class="inv-grid" id="inv-grid">
-                    <!-- Sloturi generate dinamic -->
-                </div>
+                <p style="font-size:12px; color:#94a3b8; margin-bottom:18px;">Trage armele din grilă peste sloturile 1, 2, 3 din josul ecranului!</p>
+                <div class="inv-grid" id="inv-grid"></div>
             </div>
         </div>
 
@@ -196,24 +245,24 @@
         <div class="modal-overlay" id="shop-modal">
             <div class="window-box">
                 <div class="window-header">
-                    <h2>MAGAZIN ARME</h2>
+                    <h2>MAGAZIN DE ARME</h2>
                     <div>
                         <button class="btn-nav" onclick="openInvModal()">INVENTAR</button>
-                        <button style="background:#e74c3c; border:none; color:#fff; padding:6px 12px; font-weight:bold; border-radius:6px; cursor:pointer;" onclick="closeModals()">X</button>
+                        <button style="background:rgba(239, 68, 68, 0.8); border:none; color:#fff; padding:8px 14px; font-weight:700; border-radius:10px; cursor:pointer;" onclick="closeModals()">X</button>
                     </div>
                 </div>
                 <div class="shop-list">
                     <div class="shop-row">
-                        <span>Pistol 9mm - $200</span>
-                        <button onclick="buyWeapon('Pistol', 200)">CUMPĂRĂ</button>
+                        <span>Pistol Tactic 9mm</span>
+                        <button onclick="buyWeapon('Pistol', 200)">$200</button>
                     </div>
                     <div class="shop-row">
-                        <span>Pușcă de Asalt - $500</span>
-                        <button onclick="buyWeapon('Pușcă', 500)">CUMPĂRĂ</button>
+                        <span>Pușcă de Asalt M4</span>
+                        <button onclick="buyWeapon('Pușcă', 500)">$500</button>
                     </div>
                     <div class="shop-row">
-                        <span>Bazooka RPG - $1000</span>
-                        <button onclick="buyWeapon('Bazooka', 1000)">CUMPĂRĂ</button>
+                        <span>Lansator RPG-7</span>
+                        <button onclick="buyWeapon('Bazooka', 1000)">$1,000</button>
                     </div>
                 </div>
             </div>
@@ -234,7 +283,7 @@
 
     <script>
         // Data Game User & Inventory
-        let playerData = JSON.parse(localStorage.getItem('gta_temu_v3')) || null;
+        let playerData = JSON.parse(localStorage.getItem('gta_temu_realistic_v1')) || null;
         let inventory = playerData ? (playerData.inventory || []) : [];
         let quickSlots = playerData ? (playerData.quickSlots || { 1: null, 2: null, 3: null }) : { 1: null, 2: null, 3: null };
         let activeSlot = 1;
@@ -266,11 +315,11 @@
         function saveData() {
             playerData.inventory = inventory;
             playerData.quickSlots = quickSlots;
-            localStorage.setItem('gta_temu_v3', JSON.stringify(playerData));
+            localStorage.setItem('gta_temu_realistic_v1', JSON.stringify(playerData));
         }
 
         function updateUI() {
-            moneyDisplay.innerText = `Bani: $${playerData.money}`;
+            moneyDisplay.innerText = `Bani: $${playerData.money.toLocaleString()}`;
             for (let i = 1; i <= 3; i++) {
                 document.getElementById(`qname-${i}`).innerText = quickSlots[i] || 'GOL';
                 document.getElementById(`qslot-${i}`).classList.toggle('active', activeSlot === i);
@@ -279,7 +328,6 @@
             renderInventoryGrid();
         }
 
-        // Drag and Drop Sistem
         function renderInventoryGrid() {
             const grid = document.getElementById('inv-grid');
             grid.innerHTML = '';
@@ -314,14 +362,8 @@
             updateUI();
         }
 
-        function openInvModal() {
-            closeModals();
-            document.getElementById('inv-modal').style.display = 'flex';
-        }
-        function openShopModal() {
-            closeModals();
-            document.getElementById('shop-modal').style.display = 'flex';
-        }
+        function openInvModal() { closeModals(); document.getElementById('inv-modal').style.display = 'flex'; }
+        function openShopModal() { closeModals(); document.getElementById('shop-modal').style.display = 'flex'; }
         function closeModals() {
             document.getElementById('inv-modal').style.display = 'none';
             document.getElementById('shop-modal').style.display = 'none';
@@ -331,19 +373,16 @@
             if (playerData.money >= price) {
                 playerData.money -= price;
                 inventory.push(name);
-                // Auto-echipare dacă există slot gol
                 for (let i = 1; i <= 3; i++) {
                     if (!quickSlots[i]) { quickSlots[i] = name; break; }
                 }
                 saveData();
                 updateUI();
-                alert(`Ai cumpărat ${name}! Se află în inventar.`);
             } else {
                 alert("Nu ai suficienți bani!");
             }
         }
 
-        // Key Listeners pentru Quick Slots (1, 2, 3) & Inventar (I)
         window.addEventListener('keydown', e => {
             if (e.code === 'KeyI') {
                 const invOpen = document.getElementById('inv-modal').style.display === 'flex';
@@ -354,48 +393,95 @@
             if (e.code === 'Digit3') equipSlot(3);
         });
 
-        // --- GAME ENGINE 3D ---
+        // --- GENERATOR TEXTURI HD PROCEDURALE ---
+        function createAsphaltTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#1e2430'; ctx.fillRect(0, 0, 512, 512);
+            for (let i = 0; i < 20000; i++) {
+                const val = Math.random() * 25;
+                ctx.fillStyle = `rgba(${val},${val},${val},0.15)`;
+                ctx.fillRect(Math.random()*512, Math.random()*512, 2, 2);
+            }
+            ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 6;
+            ctx.strokeRect(8, 8, 496, 496);
+            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 5; ctx.setLineDash([30, 20]);
+            ctx.beginPath(); ctx.moveTo(256, 0); ctx.lineTo(256, 512); ctx.stroke();
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+            return tex;
+        }
+
+        function createBuildingTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 512);
+            for (let x = 20; x < 490; x += 45) {
+                for (let y = 20; y < 490; y += 60) {
+                    ctx.fillStyle = Math.random() > 0.35 ? '#38bdf8' : '#1e293b';
+                    ctx.fillRect(x, y, 28, 40);
+                }
+            }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+            return tex;
+        }
+
+        // --- REALISTIC GRAPHICS GAME ENGINE ---
         function initGame() {
             const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             if (isMobile) document.getElementById('mobile-ui').style.display = 'block';
 
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0a12);
-            scene.fog = new THREE.FogExp2(0x0a0a12, 0.005);
+            scene.background = new THREE.Color(0x0284c7);
+            scene.fog = new THREE.FogExp2(0x0284c7, 0.003);
 
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.0;
             document.getElementById('game-container').appendChild(renderer.domElement);
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            // Lumini Realiste Physically Based
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
             scene.add(ambientLight);
-            const sunLight = new THREE.DirectionalLight(0xfffaed, 0.8);
-            sunLight.position.set(100, 200, 100);
+
+            const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.4);
+            sunLight.position.set(150, 250, 100);
             sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 2048; sunLight.shadow.mapSize.height = 2048;
+            sunLight.shadow.camera.near = 0.5; sunLight.shadow.camera.far = 500;
+            const d = 150;
+            sunLight.shadow.camera.left = -d; sunLight.shadow.camera.right = d;
+            sunLight.shadow.camera.top = d; sunLight.shadow.camera.bottom = -d;
             scene.add(sunLight);
 
-            // Hartă & Sol
-            const mapSize = 800;
-            const floorGeo = new THREE.PlaneGeometry(mapSize, mapSize);
-            const floorMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8 });
-            const floor = new THREE.Mesh(floorGeo, floorMat);
+            // Ground / City Grid
+            const mapSize = 900;
+            const asphaltTex = createAsphaltTexture();
+            asphaltTex.repeat.set(45, 45);
+            const floorMat = new THREE.MeshStandardMaterial({ map: asphaltTex, roughness: 0.6, metalness: 0.1 });
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(mapSize, mapSize), floorMat);
             floor.rotation.x = -Math.PI / 2;
             floor.receiveShadow = true;
             scene.add(floor);
 
-            // Clădiri & Coliziuni
+            // Buildings & Collisions
             const buildings = [];
-            const buildingGeo = new THREE.BoxGeometry(1, 1, 1);
-            const buildingMat = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+            const bTex = createBuildingTexture();
+            const bMat = new THREE.MeshStandardMaterial({ map: bTex, roughness: 0.2, metalness: 0.5 });
 
-            for (let x = -350; x <= 350; x += 60) {
-                for (let z = -350; z <= 350; z += 60) {
-                    if (Math.abs(x) < 40 && Math.abs(z) < 40) continue;
-                    const h = 25 + Math.random() * 50;
-                    const b = new THREE.Mesh(buildingGeo, buildingMat);
-                    b.scale.set(25, h, 25);
+            for (let x = -380; x <= 380; x += 65) {
+                for (let z = -380; z <= 380; z += 65) {
+                    if (Math.abs(x) < 45 && Math.abs(z) < 45) continue;
+                    const h = 30 + Math.random() * 70;
+                    const b = new THREE.Mesh(new THREE.BoxGeometry(30, h, 30), bMat);
                     b.position.set(x, h/2, z);
                     b.castShadow = true; b.receiveShadow = true;
                     scene.add(b);
@@ -403,8 +489,8 @@
                 }
             }
 
-            function checkCollision(pos, radius = 0.7) {
-                if (Math.abs(pos.x) > mapSize/2 - 10 || Math.abs(pos.z) > mapSize/2 - 10) return true;
+            function checkCollision(pos, radius = 0.8) {
+                if (Math.abs(pos.x) > mapSize/2 - 12 || Math.abs(pos.z) > mapSize/2 - 12) return true;
                 for (let b of buildings) {
                     if (pos.x + radius > b.min.x && pos.x - radius < b.max.x &&
                         pos.z + radius > b.min.z && pos.z - radius < b.max.z) return true;
@@ -412,44 +498,96 @@
                 return false;
             }
 
-            // Character
-            const playerGroup = new THREE.Group();
-            const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.9, 0.35), new THREE.MeshStandardMaterial({ color: 0x00ffcc }));
-            body.position.y = 1.05;
-            playerGroup.add(body);
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.22), new THREE.MeshStandardMaterial({ color: 0xffdbac }));
-            head.position.y = 1.65;
-            playerGroup.add(head);
+            // High Quality Character Mesh
+            function createHumanoidMesh(colorHex) {
+                const group = new THREE.Group();
+                const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.5 });
+                const skinMat = new THREE.MeshStandardMaterial({ color: 0xfbd38d, roughness: 0.7 });
+
+                const torso = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.9, 0.35), mat);
+                torso.position.y = 1.05; torso.castShadow = true; group.add(torso);
+
+                const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), skinMat);
+                head.position.y = 1.65; head.castShadow = true; group.add(head);
+
+                const legL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.65, 0.25), new THREE.MeshStandardMaterial({ color: 0x1e293b }));
+                legL.position.set(-0.16, 0.32, 0); legL.castShadow = true; group.add(legL);
+
+                const legR = legL.clone(); legR.position.x = 0.16; group.add(legR);
+
+                group.userData = { legL, legR };
+                return group;
+            }
+
+            const playerGroup = createHumanoidMesh(0x0284c7);
             playerGroup.position.set(0, 0, 10);
             scene.add(playerGroup);
 
-            // NPC-uri
+            // Model Armă 3D Așezat pe Caracter
+            const weaponMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(0.12, 0.18, 0.6),
+                new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.2 })
+            );
+            weaponMesh.position.set(0.35, 1.1, 0.2);
+            weaponMesh.visible = false;
+            playerGroup.add(weaponMesh);
+
+            // NPC Pedestrians
             const npcs = [];
-            for (let i = 0; i < 35; i++) {
-                const npc = playerGroup.clone();
-                npc.position.set((Math.random()-0.5)*500, 0, (Math.random()-0.5)*500);
+            for (let i = 0; i < 40; i++) {
+                const npc = createHumanoidMesh(Math.random() * 0xffffff);
+                npc.position.set((Math.random()-0.5)*600, 0, (Math.random()-0.5)*600);
                 scene.add(npc);
-                npcs.push({ mesh: npc, dir: new THREE.Vector3(Math.random()-0.5, 0, Math.random()-0.5).normalize(), alive: true });
+                npcs.push({ mesh: npc, dir: new THREE.Vector3(Math.random()-0.5, 0, Math.random()-0.5).normalize(), alive: true, animTimer: Math.random()*10 });
             }
 
-            // Proiectile / Gloanțe Infinite
+            // High Quality Car Models
+            function createCarMesh(colorHex) {
+                const group = new THREE.Group();
+                const bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.8, roughness: 0.1 });
+                const glassMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1, metalness: 0.9 });
+
+                const body = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.85, 4.6), bodyMat);
+                body.position.y = 0.65; body.castShadow = true; group.add(body);
+
+                const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.65, 2.4), glassMat);
+                cabin.position.set(0, 1.3, -0.2); cabin.castShadow = true; group.add(cabin);
+
+                const wheelGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.3, 24);
+                const wheelMat = new THREE.MeshStandardMaterial({ color: 0x020617, roughness: 0.9 });
+                [[-1.15,0.38,1.4],[1.15,0.38,1.4],[-1.15,0.38,-1.4],[1.15,0.38,-1.4]].forEach(p => {
+                    const w = new THREE.Mesh(wheelGeo, wheelMat);
+                    w.rotation.z = Math.PI/2; w.position.set(...p); w.castShadow = true; group.add(w);
+                });
+                return group;
+            }
+
+            const cars = [];
+            const carColors = [0xef4444, 0x3b82f6, 0x10b981, 0xf59e0b, 0x8b5cf6, 0x64748b];
+            for (let i = 0; i < 20; i++) {
+                const carMesh = createCarMesh(carColors[i % carColors.length]);
+                carMesh.position.set((Math.random()-0.5)*700, 0, (Math.random()-0.5)*700);
+                scene.add(carMesh);
+                cars.push({ mesh: carMesh, speed: 0.18 + Math.random()*0.1, isOccupied: false });
+            }
+
+            // Muji / Bullets Logic
             const bullets = [];
             function shootBullet() {
                 const currentWeapon = quickSlots[activeSlot];
                 if (!currentWeapon) return;
 
-                const bulletGeo = new THREE.SphereGeometry(0.15, 8, 8);
-                const bulletMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-                const bullet = new THREE.Mesh(bulletGeo, bulletMat);
-                
-                bullet.position.set(playerGroup.position.x, 1.2, playerGroup.position.z);
+                const bGeo = new THREE.SphereGeometry(0.12, 8, 8);
+                const bMat = new THREE.MeshBasicMaterial({ color: 0xfde047 });
+                const b = new THREE.Mesh(bGeo, bMat);
+
+                b.position.set(playerGroup.position.x, 1.2, playerGroup.position.z);
                 const dir = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), playerGroup.rotation.y);
-                
-                scene.add(bullet);
-                bullets.push({ mesh: bullet, dir: dir, speed: 1.2, life: 100 });
+
+                scene.add(b);
+                bullets.push({ mesh: b, dir: dir, speed: 1.6, life: 80 });
             }
 
-            // Click pentru shoot
             renderer.domElement.addEventListener('click', () => {
                 if (!isMobile && document.pointerLockElement === renderer.domElement) {
                     shootBullet();
@@ -458,72 +596,187 @@
                 }
             });
 
-            // Input
+            // Car Entry Mechanic
+            let currentCar = null;
+            function toggleCarInteraction() {
+                if (currentCar) {
+                    playerGroup.visible = true;
+                    playerGroup.position.set(currentCar.mesh.position.x + 2.5, 0, currentCar.mesh.position.z);
+                    currentCar.isOccupied = false;
+                    currentCar = null;
+                    document.getElementById('btn-car').innerText = "CAR";
+                } else {
+                    let closest = null, minDist = 5.0;
+                    cars.forEach(c => {
+                        const d = playerGroup.position.distanceTo(c.mesh.position);
+                        if (d < minDist) { minDist = d; closest = c; }
+                    });
+                    if (closest) {
+                        currentCar = closest;
+                        currentCar.isOccupied = true;
+                        playerGroup.visible = false;
+                        document.getElementById('btn-car').innerText = "EXIT";
+                        playerData.money += 100;
+                        saveData(); updateUI();
+                    }
+                }
+            }
+            document.getElementById('btn-car').addEventListener('click', toggleCarInteraction);
+
+            // Controls
             const keys = {};
             let cameraYaw = 0, cameraPitch = 0.25;
-            window.addEventListener('keydown', e => keys[e.code] = true);
+            let moveForward = 0, moveSide = 0;
+
+            window.addEventListener('keydown', e => {
+                keys[e.code] = true;
+                if (e.code === 'KeyF' || e.code === 'KeyE') toggleCarInteraction();
+            });
             window.addEventListener('keyup', e => keys[e.code] = false);
 
             document.addEventListener('mousemove', e => {
                 if (document.pointerLockElement === renderer.domElement) {
-                    cameraYaw -= e.movementX * 0.003;
-                    cameraPitch += e.movementY * 0.003;
+                    cameraYaw -= e.movementX * 0.0025;
+                    cameraPitch += e.movementY * 0.0025;
                     cameraPitch = Math.max(-0.2, Math.min(1.2, cameraPitch));
                 }
             });
 
-            // Loop
+            // Mobile Joystick
+            const joystickZone = document.getElementById('joystick-zone');
+            const joystickKnob = document.getElementById('joystick-knob');
+            let joyTouchId = null, joyCenter = { x: 0, y: 0 };
+
+            joystickZone.addEventListener('touchstart', e => {
+                for (let t of e.changedTouches) {
+                    if (joyTouchId === null) {
+                        joyTouchId = t.identifier;
+                        const rect = joystickZone.getBoundingClientRect();
+                        joyCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+                        updateJoy(t);
+                    }
+                }
+            });
+            joystickZone.addEventListener('touchmove', e => {
+                for (let t of e.changedTouches) { if (t.identifier === joyTouchId) updateJoy(t); }
+            });
+            const resetJoy = () => {
+                joyTouchId = null; joystickKnob.style.left = '45px'; joystickKnob.style.top = '45px';
+                moveForward = 0; moveSide = 0;
+            };
+            joystickZone.addEventListener('touchend', resetJoy);
+            joystickZone.addEventListener('touchcancel', resetJoy);
+
+            function updateJoy(t) {
+                const dx = t.clientX - joyCenter.x, dy = t.clientY - joyCenter.y;
+                const dist = Math.min(Math.hypot(dx, dy), 45), angle = Math.atan2(dy, dx);
+                joystickKnob.style.left = `${Math.cos(angle)*dist + 45}px`;
+                joystickKnob.style.top = `${Math.sin(angle)*dist + 45}px`;
+                moveSide = dx / 45; moveForward = -dy / 45;
+            }
+
+            // Animation Loop
+            let walkAnim = 0, carSpeed = 0;
             function animate() {
                 requestAnimationFrame(animate);
 
-                // Update Gloanțe
+                // Weapon visibility
+                weaponMesh.visible = !!quickSlots[activeSlot];
+
+                // Bullets Update
                 for (let i = bullets.length - 1; i >= 0; i--) {
                     const b = bullets[i];
                     b.mesh.position.addScaledVector(b.dir, b.speed);
                     b.life--;
-
-                    // Impact NPC
                     npcs.forEach(npc => {
-                        if (npc.alive && b.mesh.position.distanceTo(npc.mesh.position) < 1.2) {
-                            npc.alive = false;
-                            scene.remove(npc.mesh);
-                            playerData.money += 150;
-                            saveData();
-                            updateUI();
+                        if (npc.alive && b.mesh.position.distanceTo(npc.mesh.position) < 1.4) {
+                            npc.alive = false; scene.remove(npc.mesh);
+                            playerData.money += 200; saveData(); updateUI();
                         }
                     });
+                    if (b.life <= 0) { scene.remove(b.mesh); bullets.splice(i, 1); }
+                }
 
-                    if (b.life <= 0) {
-                        scene.remove(b.mesh);
-                        bullets.splice(i, 1);
+                // NPCs Movement
+                npcs.forEach(npc => {
+                    if (!npc.alive) return;
+                    npc.mesh.position.addScaledVector(npc.dir, 0.03);
+                    npc.mesh.rotation.y = Math.atan2(npc.dir.x, npc.dir.z);
+                    npc.animTimer += 0.1;
+                    npc.mesh.userData.legL.rotation.x = Math.sin(npc.animTimer)*0.5;
+                    npc.mesh.userData.legR.rotation.x = -Math.sin(npc.animTimer)*0.5;
+                    if (Math.abs(npc.mesh.position.x) > mapSize/2 - 20 || Math.abs(npc.mesh.position.z) > mapSize/2 - 20) npc.dir.negate();
+                });
+
+                // Cars Movement
+                cars.forEach(c => {
+                    if (!c.isOccupied) {
+                        c.mesh.translateZ(c.speed);
+                        if (Math.abs(c.mesh.position.x) > mapSize/2 - 20 || Math.abs(c.mesh.position.z) > mapSize/2 - 20) c.mesh.rotation.y += Math.PI;
                     }
+                });
+
+                if (!currentCar) {
+                    // Character Physics
+                    let mx = 0, mz = 0;
+                    if (keys['KeyW']) mz -= 1; if (keys['KeyS']) mz += 1;
+                    if (keys['KeyA']) mx -= 1; if (keys['KeyD']) mx += 1;
+                    if (Math.abs(moveForward) > 0.1) mz = -moveForward;
+                    if (Math.abs(moveSide) > 0.1) mx = moveSide;
+
+                    if (mx !== 0 || mz !== 0) {
+                        const mVec = new THREE.Vector3(mx, 0, mz).normalize().applyAxisAngle(new THREE.Vector3(0,1,0), cameraYaw);
+                        const nextP = playerGroup.position.clone().addScaledVector(mVec, 0.2);
+                        if (!checkCollision(nextP)) playerGroup.position.copy(nextP);
+                        playerGroup.rotation.y = Math.atan2(mVec.x, mVec.z);
+
+                        walkAnim += 0.18;
+                        playerGroup.userData.legL.rotation.x = Math.sin(walkAnim)*0.6;
+                        playerGroup.userData.legR.rotation.x = -Math.sin(walkAnim)*0.6;
+                    } else {
+                        playerGroup.userData.legL.rotation.x = 0;
+                        playerGroup.userData.legR.rotation.x = 0;
+                    }
+
+                    // Camera Follow Character
+                    const camDist = 6.5;
+                    camera.position.x = playerGroup.position.x + camDist * Math.sin(cameraYaw) * Math.cos(cameraPitch);
+                    camera.position.z = playerGroup.position.z + camDist * Math.cos(cameraYaw) * Math.cos(cameraPitch);
+                    camera.position.y = playerGroup.position.y + 1.8 + camDist * Math.sin(cameraPitch);
+                    camera.lookAt(playerGroup.position.x, playerGroup.position.y + 1.2, playerGroup.position.z);
+                } else {
+                    // Car Physics & Driving
+                    let accel = 0, turn = 0;
+                    if (keys['KeyW']) accel = 0.04; if (keys['KeyS']) accel = -0.02;
+                    if (keys['KeyA']) turn = 0.04; if (keys['KeyD']) turn = -0.04;
+                    if (Math.abs(moveForward) > 0.1) accel = moveForward * 0.04;
+                    if (Math.abs(moveSide) > 0.1) turn = -moveSide * 0.04;
+
+                    carSpeed = (carSpeed + accel) * 0.96;
+                    currentCar.mesh.rotation.y += turn * (carSpeed * 1.5);
+                    const nextC = currentCar.mesh.position.clone();
+                    currentCar.mesh.translateZ(carSpeed);
+
+                    if (checkCollision(currentCar.mesh.position, 1.8)) {
+                        currentCar.mesh.position.copy(nextC); carSpeed = -carSpeed * 0.3;
+                    }
+
+                    // Camera Follow Car
+                    const camDist = 10.0;
+                    camera.position.x = currentCar.mesh.position.x - camDist * Math.sin(currentCar.mesh.rotation.y);
+                    camera.position.z = currentCar.mesh.position.z - camDist * Math.cos(currentCar.mesh.rotation.y);
+                    camera.position.y = currentCar.mesh.position.y + 4.0;
+                    camera.lookAt(currentCar.mesh.position.x, currentCar.mesh.position.y + 1, currentCar.mesh.position.z);
                 }
-
-                // Mișcare Jucător
-                let moveX = 0, moveZ = 0;
-                if (keys['KeyW']) moveZ -= 1;
-                if (keys['KeyS']) moveZ += 1;
-                if (keys['KeyA']) moveX -= 1;
-                if (keys['KeyD']) moveX += 1;
-
-                if (moveX !== 0 || moveZ !== 0) {
-                    const moveVector = new THREE.Vector3(moveX, 0, moveZ).normalize();
-                    moveVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraYaw);
-
-                    const nextP = playerGroup.position.clone().addScaledVector(moveVector, 0.18);
-                    if (!checkCollision(nextP)) playerGroup.position.copy(nextP);
-                    playerGroup.rotation.y = Math.atan2(moveVector.x, moveVector.z);
-                }
-
-                // Camera Follow
-                const camDist = 6.5;
-                camera.position.x = playerGroup.position.x + camDist * Math.sin(cameraYaw) * Math.cos(cameraPitch);
-                camera.position.z = playerGroup.position.z + camDist * Math.cos(cameraYaw) * Math.cos(cameraPitch);
-                camera.position.y = playerGroup.position.y + 1.8 + camDist * Math.sin(cameraPitch);
-                camera.lookAt(playerGroup.position.x, playerGroup.position.y + 1.2, playerGroup.position.z);
 
                 renderer.render(scene, camera);
             }
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
 
             animate();
         }
